@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, DiceGameActivity!</string>
+    <string name="app_name">DiceGame</string>
+    <string name="bbg">background.png</string>
+</resources>

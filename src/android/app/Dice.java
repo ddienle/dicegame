@@ -9,6 +9,14 @@ public class Dice {
 	boolean isInPlay;
 	boolean isChuongOver; 
 	
+	public boolean isChuongOver() {
+		return isChuongOver;
+	}
+
+	public void setChuongOver(boolean isChuongOver) {
+		this.isChuongOver = isChuongOver;
+	}
+
 	public Dice(int order, int image, ImageButton btn, boolean isInPlay, boolean isChuongOver)
 	{
 		this.order = order;

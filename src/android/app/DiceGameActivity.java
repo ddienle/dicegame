@@ -32,13 +32,17 @@ public class DiceGameActivity extends Activity {
     float scale = 1.0f;
     int chuongW = 155;
     int chuongH = 179;
+    int indexOfNewDiceInPlayToHide;
+    int numberOfDiceInPlayWasOver;
     
+    RelativeLayout.LayoutParams  oldLayoutParamsOfChuongInMoving;
+    RelativeLayout.LayoutParams  newLayoutParamsOfChuongInMoving;
     //ImageButton[] btn;
     //ImageButton[] btnInPlay;
     ImageView chuong;
     ArrayList<Dice> dices;
     ArrayList<Dice> dicesInPlay;
-    
+    TranslateAnimation moveOldtoNew;
     int numberOfDiceInPlay = 0;
    
     @Override
@@ -169,8 +173,6 @@ public class DiceGameActivity extends Activity {
        
         ImageButton btnRun = new ImageButton(this);
   
-        //int w = (int)(this.runWidth*scale);
-        //int h = (int)(this.runHeight*scale);
         int w = 95;
         int h = 59;
         Log.i("Scale", "" + scale + "w = " + w + "h = " + h);
@@ -187,12 +189,9 @@ public class DiceGameActivity extends Activity {
         
         rl.addView(btnRun, layoutParamsButtonRun);
         
-        setOnClickListener(dices.get(0));
-        setOnClickListener(dices.get(1));
-        setOnClickListener(dices.get(2));
-        setOnClickListener(dices.get(3));
-        setOnClickListener(dices.get(4));
-        setOnClickListener(dices.get(5));
+        for (Dice d:dices) {
+        	setOnClickListener(d);
+        }
         
         chuong = new ImageView(this);
         chuong.setBackgroundResource(R.drawable.small_chuong);
@@ -200,10 +199,11 @@ public class DiceGameActivity extends Activity {
         		RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         
         //params.setMargins(80, 200, 80+this.chuongW, 200+this.chuongH);
-        params.setMargins(0, 0, this.chuongW, this.chuongH);
+        params.setMargins(-20, -20, this.chuongW, this.chuongH);
         
         //chuong.setScaleType(scaleType);
         rl.addView(chuong, params);
+        
         
         btnRun.setOnClickListener
         	(
@@ -219,29 +219,32 @@ public class DiceGameActivity extends Activity {
     						
     						Log.i("btnRunOnClicked", "width " + width + "height " + height);
     						//Log.i("btnRun onclicked", "random n is " + n);
-    						RelativeLayout.LayoutParams  oldLayoutParams;
-    						oldLayoutParams = (LayoutParams)chuong.getLayoutParams();
-    						TranslateAnimation moveOldtoNew;
-    						RelativeLayout.LayoutParams  newLayoutParams = oldLayoutParams;
+    						//RelativeLayout.LayoutParams  oldLayoutParams;
+    						oldLayoutParamsOfChuongInMoving = (LayoutParams)chuong.getLayoutParams();
+    						//TranslateAnimation moveOldtoNew;
+    						//RelativeLayout.LayoutParams  newLayoutParams
+    						newLayoutParamsOfChuongInMoving = oldLayoutParamsOfChuongInMoving;
     						
     						if (numberOfDiceInPlay>0)
     						{    		
+    							numberOfDiceInPlayWasOver = 0;
     							Log.i("Run", "numberOfDiceInPlay " + numberOfDiceInPlay);
     							for (int i=0; i<numberOfDiceInPlay; i++)
     							{
-    								newLayoutParams = (LayoutParams)(((dicesInPlay.get(i)).getBtn()).getLayoutParams());      
-    								//chuong.setLayoutParams(newLayoutParams);        	
+    								newLayoutParamsOfChuongInMoving = (LayoutParams)(((dicesInPlay.get(i)).getBtn()).getLayoutParams());      
+    								//chuong.setLayoutParams(newLayoutParams);       
+    								indexOfNewDiceInPlayToHide = i;
     								break;
     							}
     							
-    							Log.i("btnRunOnCliced", "fromX " + (width-oldLayoutParams.leftMargin) + "toX " + (width-newLayoutParams.leftMargin));
-    							Log.i("btnRunOnCliced", "fromY " + (height-oldLayoutParams.topMargin) + "toY " + (height-newLayoutParams.topMargin));
+    							Log.i("btnRunOnCliced", "fromX " + (width-oldLayoutParamsOfChuongInMoving.leftMargin) + "toX " + (width-newLayoutParamsOfChuongInMoving.leftMargin));
+    							Log.i("btnRunOnCliced", "fromY " + (height-oldLayoutParamsOfChuongInMoving.topMargin) + "toY " + (height-newLayoutParamsOfChuongInMoving.topMargin));
     							
     							moveOldtoNew = new TranslateAnimation(
     											(0),
-    											(newLayoutParams.leftMargin),
+    											(newLayoutParamsOfChuongInMoving.leftMargin),
     											(0), 
-    											(newLayoutParams.topMargin));
+    											(newLayoutParamsOfChuongInMoving.topMargin));
     							
     							moveOldtoNew.setDuration(500);
     							
@@ -259,6 +262,23 @@ public class DiceGameActivity extends Activity {
 											@Override
 											public void onAnimationEnd(Animation animation) {
 												Log.i("animation end", "ended");
+												numberOfDiceInPlayWasOver++;
+												(dicesInPlay.get(indexOfNewDiceInPlayToHide)).setChuongOver(true);
+												(dicesInPlay.get(indexOfNewDiceInPlayToHide)).getBtn().setVisibility(View.INVISIBLE);		
+												
+												if (numberOfDiceInPlayWasOver < numberOfDiceInPlay)
+												{
+
+													//newLayoutParamsOfChuongInMoving = (LayoutParams)(((dicesInPlay.get(numberOfDiceInPlayWasOver+1)).getBtn()).getLayoutParams());      
+					    							//moveOldtoNew = new TranslateAnimation(
+			    									//		(0),
+			    									//		(newLayoutParamsOfChuongInMoving.leftMargin),
+			    									//		(0), 
+			    									//		(newLayoutParamsOfChuongInMoving.topMargin));
+					    							//moveOldtoNew.setDuration(500);
+													//moveOldtoNew.
+													//chuong.startAnimation(moveOldtoNew);
+												}
 											}
 										});
     						
